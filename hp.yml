@@ -1,0 +1,35 @@
+- hosts: loadbalancer
+  tasks: 
+       - name: "installing haproxy in the loadbalancer"
+         package: 
+             name: "haproxy"
+             state: present
+       - name: "copying configuration file haproxy" 
+         template: 
+             dest: "/etc/haproxy/haproxy.cfg"
+             src: "/root/haproxy.cfg"
+       - name: "restarting the loadbalancer"
+         service:
+             name: "haproxy"
+             state: restarted
+
+- hosts: webserver
+  tasks:
+       - name: "installing the httpd software"
+         package: 
+                name: "httpd"
+                state: present
+       - name: "installing the php on the webserver"
+         package: 
+                name: "php"
+                state: present
+       - name: "copying the content into webserver"
+         copy: 
+                dest: "/var/www/html/index.php"
+                src: "/root/index.php"
+       - name: "starting the httpd"
+         service: 
+                name: "httpd"
+                state: started   
+
+
